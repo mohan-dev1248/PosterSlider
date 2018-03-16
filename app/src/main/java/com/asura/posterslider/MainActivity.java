@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         posterSlider = (PosterSlider) findViewById(R.id.poster_slider);
         List<Poster> posters = new ArrayList<>();
         posters.add(new DrawableImage(R.drawable.img_5126));
-        posters.add(new DrawableImage(R.drawable.art_category));
         posters.add(new RawVideo(R.raw.img_2073));
         posterSlider.setPosters(posters);
 

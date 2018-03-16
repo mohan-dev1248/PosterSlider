@@ -256,6 +256,9 @@ public class PosterFragment extends Fragment implements Player.EventListener{
         super.setUserVisibleHint(isVisibleToUser);
         if(isVisibleToUser&&isLooping&&player!=null){
             videoPlayListener.onVideoStarted();
+            if(player.getPlaybackState()==STATE_ENDED){
+                player.seekTo(0);
+            }
             player.setPlayWhenReady(true);
             player.addListener(this);
         }
