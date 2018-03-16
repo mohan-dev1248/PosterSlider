@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.asura.posterslider.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <com.asura.library.views.PosterSlider
+        android:id="@+id/poster_slider"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="8dp"
+        app:defaultIndicator="circle"
+        app:imageSlideInterval="5000"
+        app:layout_constraintTop_toTopOf="parent"
+        app:hideIndicators="true"
+        app:loopSlides="true" />
+
+</android.support.constraint.ConstraintLayout>

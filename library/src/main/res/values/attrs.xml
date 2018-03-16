@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PosterSlider">
+        <attr name="selectedSlideIndicator" format="reference"/>
+        <attr name="unSelectedSlideIndicator" format="reference"/>
+        <attr name="defaultIndicator" format="integer">
+            <enum name="circle" value="0" />
+            <enum name="square" value="1" />
+            <enum name="roundSquare" value="2"/>
+            <enum name="dash" value="3"/>
+        </attr>
+        <attr name="indicatorSize" format="dimension" />
+        <attr name="animateIndicators" format="boolean"/>
+        <attr name="loopSlides" format="boolean"/>
+        <attr name="defaultPoster" format="integer"/>
+        <attr name="imageSlideInterval" format="integer"/>
+        <attr name="hideIndicators" format="boolean"/>
+
+    </declare-styleable>
+</resources>
