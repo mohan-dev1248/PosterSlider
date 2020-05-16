@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.asura.library.posters.DrawableImage;
 import com.asura.library.posters.Poster;
 import com.asura.library.posters.RawVideo;
+import com.asura.library.posters.RemoteCachedVideo;
 import com.asura.library.posters.RemoteVideo;
 import com.asura.library.views.PosterSlider;
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         List<Poster> posters = new ArrayList<>();
         posters.add(new DrawableImage(R.drawable.img_5126));
         posters.add(new RawVideo(R.raw.img_2073));
+        posters.add(new RemoteCachedVideo(Uri.parse("https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4")));
         posterSlider.setPosters(posters);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

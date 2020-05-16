@@ -18,11 +18,13 @@ import com.asura.library.posters.DrawableImage;
 import com.asura.library.posters.ImagePoster;
 import com.asura.library.posters.Poster;
 import com.asura.library.posters.RawVideo;
+import com.asura.library.posters.RemoteCachedVideo;
 import com.asura.library.posters.RemoteImage;
 import com.asura.library.posters.RemoteVideo;
 import com.asura.library.posters.VideoPoster;
 import com.asura.library.views.AdjustableImageView;
 import com.asura.library.views.PosterSlider;
+import com.asura.library.factories.CacheDataSourceFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -188,6 +190,14 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                     player.prepare(mediaSource, true, false);
                 }
 
+                else if(poster instanceof RemoteCachedVideo){
+                    RemoteCachedVideo video = (RemoteCachedVideo) poster;
+
+                    MediaSource mediaSource = new ExtractorMediaSource(video.getUri(),
+                            new CacheDataSourceFactory(getContext(), 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
+                    player.setPlayWhenReady(true);
+                    player.prepare(mediaSource, true, false);
+                }
 
                 return playerView;
             }
