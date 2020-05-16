@@ -44,5 +44,7 @@ Also in your root gradle file
     posters.add(new RawVideo(R.raw.yourRawFile));
     //add remote video using uri
     posters.add(new RemoteVideo(Put your Uri here);
+    //add remote video using uri for cached use
+    posters.add(new RemoteCachedVideo(Put your Uri here);
     posterSlider.setPosters(posters);
 ```
