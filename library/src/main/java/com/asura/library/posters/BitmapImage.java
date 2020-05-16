@@ -3,7 +3,7 @@ package com.asura.library.posters;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class BitmapImage extends ImagePoster implements Parcelable {
     private Bitmap bitmap;

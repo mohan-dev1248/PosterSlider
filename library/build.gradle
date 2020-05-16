@@ -3,17 +3,17 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.mohan-dev1248'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
 
 
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -23,6 +23,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility = 1.8
+    }
 
 }
 
@@ -30,12 +33,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'com.google.android.exoplayer:exoplayer:2.7.0'
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.4'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.danikula:videocache:2.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }

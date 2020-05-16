@@ -1,16 +1,16 @@
 package com.asura.library.views.fragments;
 
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.asura.library.R;
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.events.OnPosterClickListener;
 import com.asura.library.posters.BitmapImage;
@@ -24,9 +24,9 @@ import com.asura.library.posters.RemoteVideo;
 import com.asura.library.posters.VideoPoster;
 import com.asura.library.views.AdjustableImageView;
 import com.asura.library.views.PosterSlider;
-import com.asura.library.factories.CacheDataSourceFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -47,6 +48,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Util;
@@ -193,10 +195,16 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                 else if(poster instanceof RemoteCachedVideo){
                     RemoteCachedVideo video = (RemoteCachedVideo) poster;
 
-                    MediaSource mediaSource = new ExtractorMediaSource(video.getUri(),
-                            new CacheDataSourceFactory(getContext(), 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
-                    player.setPlayWhenReady(true);
-                    player.prepare(mediaSource, true, false);
+                    HttpProxyCacheServer proxyServer = new HttpProxyCacheServer.Builder(getContext()).maxCacheSize(1024 * 1024 * 1024).build();
+
+                    String proxyURL = proxyServer.getProxyUrl(video.getUri().toString());
+
+                    DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
+                            Util.getUserAgent(getContext(), getActivity().getApplicationContext().getPackageName()));
+
+
+                    player.prepare(new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(Uri.parse(proxyURL)));
                 }
 
                 return playerView;
