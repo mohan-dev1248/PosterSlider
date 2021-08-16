@@ -4,6 +4,7 @@ package com.asura.library.views.fragments;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,25 +27,30 @@ import com.asura.library.views.PosterSlider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Util;
 
-public class PosterFragment extends Fragment implements Player.Listener {
+public class PosterFragment extends Fragment implements Player.EventListener {
 
     private Poster poster;
 
@@ -78,8 +84,8 @@ public class PosterFragment extends Fragment implements Player.Listener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         if (poster != null) {
             if (poster instanceof ImagePoster) {
                 final AdjustableImageView imageView = new AdjustableImageView(getActivity());
@@ -124,24 +130,27 @@ public class PosterFragment extends Fragment implements Player.Listener {
                     }
                 }
                 imageView.setOnTouchListener(poster.getOnTouchListener());
-                imageView.setOnClickListener(view -> {
-                    OnPosterClickListener onPosterClickListener = poster.getOnPosterClickListener();
-                    if (onPosterClickListener != null) {
-                        onPosterClickListener.onClick(poster.getPosition());
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        OnPosterClickListener onPosterClickListener = poster.getOnPosterClickListener();
+                        if (onPosterClickListener != null) {
+                            onPosterClickListener.onClick(poster.getPosition());
+                        }
                     }
                 });
                 return imageView;
             } else if (poster instanceof VideoPoster) {
                 final PlayerView playerView = new PlayerView(getActivity());
 
-                MediaSourceFactory mediaSourceFactory =
-                        new DefaultMediaSourceFactory(requireContext())
-                                .setAdViewProvider(playerView);
+                BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+                TrackSelection.Factory videoTrackSelectionFactory =
+                        new AdaptiveTrackSelection.Factory(bandwidthMeter);
+                TrackSelector trackSelector =
+                        new DefaultTrackSelector(videoTrackSelectionFactory);
 
-                player = new SimpleExoPlayer.Builder(requireContext())
-                        .setTrackSelector(new DefaultTrackSelector(requireContext()))
-                        .setMediaSourceFactory(mediaSourceFactory)
-                        .build();
+                player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+                //
 
                 playerView.setPlayer(player);
                 if (isLooping) {
@@ -151,7 +160,7 @@ public class PosterFragment extends Fragment implements Player.Listener {
                 if (poster instanceof RawVideo) {
                     RawVideo video = (RawVideo) poster;
                     DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(video.getRawResource()));
-                    final RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(requireContext());
+                    final RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(getActivity());
                     try {
                         rawResourceDataSource.open(dataSpec);
                     } catch (RawResourceDataSource.RawResourceDataSourceException e) {
