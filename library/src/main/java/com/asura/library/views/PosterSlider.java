@@ -6,24 +6,23 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.support.v4.view.ViewPager;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.asura.library.R;
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.events.OnPosterClickListener;
 import com.asura.library.posters.Poster;
-import com.asura.library.views.fragments.PosterFragment;
 import com.asura.library.views.indicators.IndicatorShape;
 
 import java.util.ArrayList;
@@ -63,12 +62,14 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
 
     private SlideIndicatorsGroup slideIndicatorsGroup;
 
-    private static HandlerThread handlerThread;
-    static{
+    private static final HandlerThread handlerThread;
+
+    static {
         handlerThread = new HandlerThread("TimerThread");
         handlerThread.start();
     }
-    private Handler handler = new Handler(handlerThread.getLooper());
+
+    private final Handler handler = new Handler(handlerThread.getLooper());
 
     private boolean setupIsCalled = false;
     List<Poster> posterQueue = new ArrayList<>();

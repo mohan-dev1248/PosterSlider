@@ -3,10 +3,11 @@ package com.asura.library.posters;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
+
+import androidx.annotation.DrawableRes;
 
 public class DrawableImage extends ImagePoster implements Parcelable {
-    private int drawable;
+    private final int drawable;
 
     public DrawableImage(@DrawableRes int drawable) {
         this.drawable = drawable;

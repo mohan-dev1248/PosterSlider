@@ -2,7 +2,8 @@ package com.asura.library.views.indicators;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.content.res.ResourcesCompat;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.asura.library.R;
 

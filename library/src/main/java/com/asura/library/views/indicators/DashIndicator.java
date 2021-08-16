@@ -1,8 +1,9 @@
 package com.asura.library.views.indicators;
 
 import android.content.Context;
-import android.support.v4.content.res.ResourcesCompat;
 import android.widget.LinearLayout;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.asura.library.R;
 
