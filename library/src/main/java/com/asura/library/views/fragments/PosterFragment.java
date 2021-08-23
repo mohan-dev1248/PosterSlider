@@ -1,16 +1,17 @@
 package com.asura.library.views.fragments;
 
 
+import static com.google.android.exoplayer2.Player.STATE_ENDED;
+
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.asura.library.R;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.events.OnPosterClickListener;
 import com.asura.library.posters.BitmapImage;
@@ -49,9 +50,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Util;
 
-import static com.google.android.exoplayer2.Player.STATE_ENDED;
-
-public class PosterFragment extends Fragment implements Player.EventListener{
+public class PosterFragment extends Fragment implements Player.EventListener {
 
     private Poster poster;
 
@@ -68,7 +67,7 @@ public class PosterFragment extends Fragment implements Player.EventListener{
         PosterFragment fragment = new PosterFragment();
         fragment.setVideoPlayListener(videoPlayListener);
         Bundle args = new Bundle();
-        args.putParcelable("poster",poster);
+        args.putParcelable("poster", poster);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,24 +86,24 @@ public class PosterFragment extends Fragment implements Player.EventListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(poster!=null){
-            if(poster instanceof ImagePoster){
+        if (poster != null) {
+            if (poster instanceof ImagePoster) {
                 final AdjustableImageView imageView = new AdjustableImageView(getActivity());
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 imageView.setAdjustViewBounds(true);
                 ImagePoster imagePoster = (ImagePoster) poster;
                 imageView.setScaleType(imagePoster.getScaleType());
-                if(imagePoster instanceof DrawableImage){
+                if (imagePoster instanceof DrawableImage) {
                     DrawableImage image = (DrawableImage) imagePoster;
                     Glide.with(getActivity())
                             .load(image.getDrawable())
                             .into(imageView);
-                }else if(imagePoster instanceof BitmapImage){
+                } else if (imagePoster instanceof BitmapImage) {
                     BitmapImage image = (BitmapImage) imagePoster;
                     Glide.with(getActivity())
                             .load(image.getBitmap())
                             .into(imageView);
-                }else {
+                } else {
                     final RemoteImage image = (RemoteImage) imagePoster;
                     if (image.getErrorDrawable() == null && image.getPlaceHolder() == null) {
                         Glide.with(getActivity()).load(image.getUrl()).into(imageView);
@@ -125,7 +124,7 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                             Glide.with(getActivity())
                                     .load(image.getUrl())
                                     .apply(new RequestOptions()
-                                        .placeholder(image.getPlaceHolder()))
+                                            .placeholder(image.getPlaceHolder()))
                                     .into(imageView);
                         }
                     }
@@ -135,14 +134,13 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                     @Override
                     public void onClick(View view) {
                         OnPosterClickListener onPosterClickListener = poster.getOnPosterClickListener();
-                        if(onPosterClickListener!=null){
+                        if (onPosterClickListener != null) {
                             onPosterClickListener.onClick(poster.getPosition());
                         }
                     }
                 });
                 return imageView;
-            }
-            else if (poster instanceof VideoPoster){
+            } else if (poster instanceof VideoPoster) {
                 final PlayerView playerView = new PlayerView(getActivity());
 
                 BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -151,15 +149,15 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                 TrackSelector trackSelector =
                         new DefaultTrackSelector(videoTrackSelectionFactory);
 
-                player = ExoPlayerFactory.newSimpleInstance(getActivity(),trackSelector);
+                player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
                 //
 
                 playerView.setPlayer(player);
-                if(isLooping){
+                if (isLooping) {
                     playerView.setUseController(false);
                 }
 
-                if(poster instanceof RawVideo){
+                if (poster instanceof RawVideo) {
                     RawVideo video = (RawVideo) poster;
                     DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(video.getRawResource()));
                     final RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(getActivity());
@@ -176,25 +174,22 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                         }
                     };
                     ExtractorMediaSource mediaSource = new ExtractorMediaSource(rawResourceDataSource.getUri(),
-                            factory,new DefaultExtractorsFactory(), new Handler(),null);
+                            factory, new DefaultExtractorsFactory(), new Handler(), null);
                     player.prepare(mediaSource);
-                }
-
-                else if(poster instanceof RemoteVideo){
+                } else if (poster instanceof RemoteVideo) {
                     RemoteVideo video = (RemoteVideo) poster;
                     MediaSource mediaSource = new ExtractorMediaSource.Factory(
-                            new DefaultHttpDataSourceFactory(Util.getUserAgent(getActivity(),"PosterSlider"))).
+                            new DefaultHttpDataSourceFactory(Util.getUserAgent(getActivity(), "PosterSlider"))).
                             createMediaSource(video.getUri());
                     player.prepare(mediaSource, true, false);
                 }
 
 
                 return playerView;
-            }
-            else{
+            } else {
                 throw new RuntimeException("Unknown Poster kind");
             }
-        }else{
+        } else {
             throw new RuntimeException("Poster cannot be null");
         }
     }
@@ -216,7 +211,7 @@ public class PosterFragment extends Fragment implements Player.EventListener{
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if(isLooping&&playbackState==STATE_ENDED){
+        if (isLooping && playbackState == STATE_ENDED) {
             videoPlayListener.onVideoStopped();
         }
     }
@@ -254,9 +249,9 @@ public class PosterFragment extends Fragment implements Player.EventListener{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser&&isLooping&&player!=null){
+        if (isVisibleToUser && isLooping && player != null) {
             videoPlayListener.onVideoStarted();
-            if(player.getPlaybackState()==STATE_ENDED){
+            if (player.getPlaybackState() == STATE_ENDED) {
                 player.seekTo(0);
             }
             player.setPlayWhenReady(true);

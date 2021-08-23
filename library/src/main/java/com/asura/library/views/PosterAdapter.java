@@ -1,10 +1,11 @@
 package com.asura.library.views;
 
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.LayoutDirection;
+
+import androidx.annotation.LayoutRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.posters.Poster;
@@ -16,15 +17,15 @@ import java.util.List;
 
 public class PosterAdapter extends FragmentStatePagerAdapter {
 
-    private List<Poster> posters;
-    private boolean isLooping;
+    private final List<Poster> posters;
+    private final boolean isLooping;
 
     @LayoutRes
     private int emptyView;
 
     private IVideoPlayListener videoPlayListener;
 
-    
+
     public PosterAdapter(FragmentManager supportFragmentManager, boolean isLooping, List<Poster> posters) {
         super(supportFragmentManager);
         this.isLooping = isLooping;

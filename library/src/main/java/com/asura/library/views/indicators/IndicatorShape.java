@@ -1,12 +1,12 @@
 package com.asura.library.views.indicators;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.view.Gravity;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.asura.library.R;
 
