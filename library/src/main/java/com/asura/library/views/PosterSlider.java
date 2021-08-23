@@ -1,6 +1,7 @@
 package com.asura.library.views;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -138,9 +139,12 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                 public void run() {
                     if (getContext() instanceof AppCompatActivity) {
                         hostActivity = (AppCompatActivity) getContext();
+                    } else if (getContext() instanceof ContextWrapper && ((ContextWrapper) getContext()).getBaseContext() instanceof AppCompatActivity) {
+                        hostActivity = (AppCompatActivity) ((ContextWrapper) getContext()).getBaseContext();
                     } else {
                         throw new RuntimeException("Host activity must extend AppCompatActivity");
                     }
+
                     boolean mustMakeViewPagerWrapContent = getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT;
 
                     viewPager = new CustomViewPager(getContext(), mustMakeViewPagerWrapContent);
